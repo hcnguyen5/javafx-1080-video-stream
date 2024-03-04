@@ -22,13 +22,17 @@ public class App extends Application {
 
   private boolean use1080 = true;
 
+  private MediaView mediaView;
+
   private Label status = new Label();
 
   @Override
   public void start(Stage primaryStage) {
-    var pane = new StackPane();
+    mediaView = createMediaView();
 
-    pane.getChildren().setAll(createMediaView(), status);
+    var pane = new StackPane();
+    mediaView.fitHeightProperty().bind(pane.heightProperty());
+    pane.getChildren().setAll(mediaView, status);
 
     var scene = new Scene(pane, 1024, 768);
     primaryStage.setScene(scene);
@@ -54,6 +58,9 @@ public class App extends Application {
       initMediaPlayer(mediaView);
     });
 
+    mediaView.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
+      System.out.println("Resized to " + newValue.getWidth() + "x" + newValue.getHeight());
+    });
 
     return mediaView;
   }
@@ -63,6 +70,9 @@ public class App extends Application {
     final var mediaPlayer = new MediaPlayer(new Media(getStreamUrl()));
     mediaPlayer.setAutoPlay(true);
     mediaPlayer.setVolume(0.25);
+    mediaPlayer.statusProperty().addListener((observable, oldValue, newValue) -> {
+      System.out.println("Media status: " + newValue);
+    });
     mediaView.setMediaPlayer(mediaPlayer);
   }
 
