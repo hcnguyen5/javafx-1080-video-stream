@@ -1,0 +1,14 @@
+*.class
+# Java Flight Recorder
+*.jfr
+tmp/
+*.log
+
+# Gradle
+.gradle/
+build/
+classes/
+
+# Mac OSX
+.DS_Store
+
